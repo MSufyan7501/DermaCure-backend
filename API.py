@@ -36,7 +36,7 @@ def RemovingHair(fname):
     cv2.imwrite(os.path.join("static","uploads",fname),dst,[int(cv2.IMWRITE_JPEG_QUALITY), 90])
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET','POST'])
 def upload_file():
     # check if the post request has the file part
     if 'img' not in request.files:
@@ -74,9 +74,9 @@ def upload_file():
         resp = jsonify(errors)
         resp.status_code = 502
         return resp
-@app.route('/clearedImg/<filename>', methods=['POST'])
+@app.route('/clearedImg/<filename>', methods=['GET'])
 def returnImg(filename):
-    return send_file(f"static/uploads/{filename}")
+    return (send_file(f"static/uploads/{filename}"))
 
 if __name__ == '__main__':
     app.run(debug=True)
