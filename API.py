@@ -145,10 +145,21 @@ def PredictResults(fname):
     yhat = new_model.predict(np.expand_dims(resize/64, 0))
 
     x=np.array(yhat)
-    for i in range(3):
-        print(x[0][i]*100,'\n')
     
-    return x.argmax()
+    pridiction={}
+
+    maxindex=x.argmax()
+    if maxindex==0:
+        pridiction['result'] = "BKL"
+        pridiction['percentage'] = x[0][0]*100
+    elif maxindex==1:
+        pridiction['result'] = "NV"
+        pridiction['percentage'] = x[0][1]*100
+    elif maxindex==2:
+        pridiction['result'] = "MEL"
+        pridiction['percentage'] = x[0][2]*100
+
+    return pridiction
     
 
 @app.route('/upload', methods=['GET','POST'])
@@ -180,7 +191,7 @@ def upload_file():
         return resp
     if success:
         success_resp['filename'] = filename
-        success_resp['url'] = "http://127.0.0.1:5000/static/uploads/" + filename
+        success_resp['url'] = "http://192.168.100.11:5000/static/uploads/" + filename
         resp = jsonify(success_resp)
         resp.status_code = 201
         RemovingHair(filename)
@@ -195,18 +206,22 @@ def returnImg(filename):
 
 @app.route('/predict/<filename>', methods=['GET'])
 def getPrediction(filename):
-    maxindex=PredictResults(filename)
-    pridiction={}
-    if maxindex==0:
-        pridiction['result'] = "BKL"
-    elif maxindex==1:
-        pridiction['result'] = "NV"
-    elif maxindex==2:
-        pridiction['result'] = "MEL"
+    pre=PredictResults(filename)
+    # pridiction={}
+    # if maxindex==0:
+    #     pridiction['result'] = "BKL"
+    #     pridiction['percentage'] = 70
+    # elif maxindex==1:
+    #     pridiction['result'] = "NV"
+    #     pridiction['percentage'] = 80
+    # elif maxindex==2:
+    #     pridiction['result'] = "MEL"
+    #     pridiction['percentage'] = 90
     
-    resp=jsonify(pridiction)
+    resp=jsonify(pre)
     return resp
  
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.debug=True
+    app.run(host="0.0.0.0",port=5000)
