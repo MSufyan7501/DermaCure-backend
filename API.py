@@ -156,6 +156,9 @@ def PredictResults(fname):
         pridiction['result'] = "NV"
         pridiction['percentage'] = x[0][1]*100
     elif maxindex==2:
+        pridiction['result'] = "Others"
+        pridiction['percentage'] = x[0][2]*100
+    elif maxindex==2:
         pridiction['result'] = "MEL"
         pridiction['percentage'] = x[0][2]*100
 
@@ -200,7 +203,7 @@ def upload_file():
         resp = jsonify(errors)
         resp.status_code = 502
         return resp
-@app.route('/clearedImg/<filename>', methods=['GET'])
+@app.route('/response/<filename>', methods=['GET'])
 def returnImg(filename):
     return (send_file(f"static/uploads/{filename}"))
 
@@ -220,6 +223,7 @@ def getPrediction(filename):
     
     resp=jsonify(pre)
     return resp
+    # return (send_file(f"static/uploads/{filename}"))
  
 
 if __name__ == '__main__':
